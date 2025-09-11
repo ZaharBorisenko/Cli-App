@@ -15,7 +15,7 @@ type Todos []models.Todo
 func (todos *Todos) PrintTodos() {
 	table := table2.New(os.Stdout)
 	table.SetRowLines(false)
-	table.SetHeaders("#", "Title", "Completed", "Created at", "Completed at")
+	table.SetHeaders("#", "Title", "Description", "Completed", "Created at", "Completed at")
 	for id, t := range *todos {
 		completed := "❌"
 		completedAt := ""
@@ -27,7 +27,7 @@ func (todos *Todos) PrintTodos() {
 			}
 		}
 
-		table.AddRow(strconv.Itoa(id), t.Title, completed, t.CreatedAt.Format(time.RFC1123), completedAt)
+		table.AddRow(strconv.Itoa(id), t.Title, t.Description, completed, t.CreatedAt.Format(time.RFC1123), completedAt)
 	}
 
 	table.Render()
@@ -42,6 +42,17 @@ func (todos *Todos) Add(title string) {
 	}
 
 	*todos = append(*todos, newTodo)
+	todos.PrintTodos()
+}
+
+func (todos *Todos) AddDescription(id int, description string) error {
+	t := *todos
+	if err := t.ValidateId(id); err != nil {
+		return err
+	}
+	t[id].Description = description
+	todos.PrintTodos()
+	return nil
 }
 
 func (todos *Todos) ValidateId(id int) error {
@@ -63,6 +74,7 @@ func (todos *Todos) Delete(id int) error {
 	}
 
 	*todos = append(t[:id], t[id+1:]...)
+	todos.PrintTodos()
 	return nil
 }
 
@@ -84,6 +96,7 @@ func (todos *Todos) Toggle(id int) error {
 
 	t[id].Completed = !isCompleted
 	*todos = t
+	todos.PrintTodos()
 	return nil
 }
 
@@ -96,5 +109,6 @@ func (todos *Todos) Edit(id int, newTitle string) error {
 
 	t[id].Title = newTitle
 	*todos = t
+	todos.PrintTodos()
 	return nil
 }
