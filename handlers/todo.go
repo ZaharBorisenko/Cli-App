@@ -4,33 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ZaharBorisenko/Cli-App/models"
-	table2 "github.com/aquasecurity/table"
-	"os"
-	"strconv"
 	"time"
 )
 
 type Todos []models.Todo
 
 func (todos *Todos) PrintTodos() {
-	table := table2.New(os.Stdout)
-	table.SetRowLines(false)
-	table.SetHeaders("#", "Title", "Description", "Completed", "Created at", "Completed at")
-	for id, t := range *todos {
-		completed := "❌"
-		completedAt := ""
-
-		if t.Completed {
-			completed = "✅"
-			if t.CompletedAt != nil {
-				completedAt = t.CompletedAt.Format(time.RFC1123)
-			}
-		}
-
-		table.AddRow(strconv.Itoa(id), t.Title, t.Description, completed, t.CreatedAt.Format(time.RFC1123), completedAt)
-	}
-
-	table.Render()
+	PrintTable(*todos, TableConfig{
+		ShowCategory:    true,
+		ShowCompletedAt: true,
+	})
 }
 
 func (todos *Todos) Add(title string) {
