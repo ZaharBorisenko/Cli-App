@@ -13,12 +13,15 @@ func (todos *Todos) PrintTodos() {
 	PrintTable(*todos, TableConfig{
 		ShowCategory:    true,
 		ShowCompletedAt: true,
+		ShowPriority:    true,
+		ShowStatus:      true,
 	})
 }
 
 func (todos *Todos) Add(title string) {
 	newTodo := models.Todo{
 		Title:       title,
+		Status:      models.StatusTodo,
 		Completed:   false,
 		CreatedAt:   time.Now(),
 		CompletedAt: nil,

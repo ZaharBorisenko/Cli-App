@@ -4,21 +4,29 @@ import (
 	"flag"
 	"fmt"
 	"github.com/ZaharBorisenko/Cli-App/handlers"
+	"github.com/ZaharBorisenko/Cli-App/models"
 	"strconv"
 	"strings"
 )
 
 type CmdFlags struct {
-	Add         string
-	AddDesc     string
-	Del         int
-	Edit        string
-	Toggle      int
-	List        bool
-	AddCategory string
-	SetCategory string
-	ListByCat   string
-	ListCats    bool
+	Add            string
+	AddDesc        string
+	Del            int
+	Edit           string
+	Toggle         int
+	List           bool
+	AddCategory    string
+	SetCategory    string
+	ListByCat      string
+	ListCats       bool
+	SetPriority    string
+	ListByPriority string
+	Colors         bool
+	SetStatus      string
+	ListByStatus   string
+	ListDone       bool
+	ListActive     bool
 }
 
 func NewCmdFlags() *CmdFlags {
@@ -38,12 +46,26 @@ func NewCmdFlags() *CmdFlags {
 	flag.StringVar(&cf.ListByCat, "listByCat", "", "List tasks by category")
 	flag.BoolVar(&cf.ListCats, "listCats", false, "List all categories")
 
+	//priority
+	flag.StringVar(&cf.SetPriority, "setPriority", "", "Set priority for a task. id:priority (high/medium/low/none)")
+	flag.StringVar(&cf.ListByPriority, "listByPriority", "", "List tasks by priority (high/medium/low/none)")
+	flag.BoolVar(&cf.Colors, "colors", true, "Enable/disable colors")
+
+	//status
+	flag.StringVar(&cf.SetStatus, "setStatus", "", "Set status for a task. id:status (todo/inprogress/done)")
+	flag.StringVar(&cf.ListByStatus, "listByStatus", "", "List tasks by status (todo/inprogress/done)")
+	flag.BoolVar(&cf.ListDone, "listDone", false, "List completed tasks")
+	flag.BoolVar(&cf.ListActive, "listActive", false, "List active tasks (not completed)")
+
 	flag.Parse()
 	return &cf
 }
 
 func (cf *CmdFlags) Execute(todos *handlers.Todos) {
 	categoryManager := handlers.NewCategoryManager(todos)
+	priorityManager := handlers.NewPriorityManager(todos)
+	statusManager := handlers.NewStatusManager(todos)
+
 	switch {
 	case cf.List:
 		todos.PrintTodos()
@@ -100,6 +122,82 @@ func (cf *CmdFlags) Execute(todos *handlers.Todos) {
 
 	case cf.ListCats:
 		categoryManager.PrintAllCategories()
+	case cf.SetPriority != "":
+		parts := strings.SplitN(cf.SetPriority, ":", 2)
+		if len(parts) != 2 {
+			fmt.Println("invalid format for setPriority. Use: id:priority")
+			return
+		}
+		index, err := strconv.Atoi(parts[0])
+		if err != nil {
+			fmt.Println("invalid index")
+			return
+		}
+		priority, err := priorityManager.ValidatePriority(strings.ToLower(parts[1]))
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		if err := priorityManager.SetPriority(index, priority); err != nil {
+			fmt.Println("Error:", err)
+		} else {
+			fmt.Printf("Priority '%s' set for task %d\n", priority, index)
+			todos.PrintTodos()
+		}
+
+	case cf.ListByPriority != "":
+		priority, err := priorityManager.ValidatePriority(strings.ToLower(cf.ListByPriority))
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		priorityManager.PrintByPriority(priority)
+	case cf.SetStatus != "":
+		parts := strings.SplitN(cf.SetStatus, ":", 2)
+		if len(parts) != 2 {
+			fmt.Println("invalid format for setStatus. Use: id:status")
+			return
+		}
+		index, err := strconv.Atoi(parts[0])
+		if err != nil {
+			fmt.Println("invalid index")
+			return
+		}
+		status, err := statusManager.ValidateStatus(strings.ToLower(parts[1]))
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		if err := statusManager.SetStatus(index, status); err != nil {
+			fmt.Println("Error:", err)
+		} else {
+			fmt.Printf("Status '%s' set for task %d\n", status, index)
+			todos.PrintTodos()
+		}
+
+	case cf.ListByStatus != "":
+		status, err := statusManager.ValidateStatus(strings.ToLower(cf.ListByStatus))
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		statusManager.PrintByStatus(status)
+
+	case cf.ListDone:
+		statusManager.PrintByStatus(models.StatusDone)
+
+	case cf.ListActive:
+		var activeTodos []models.Todo
+		for _, t := range *todos {
+			if t.Status != models.StatusDone {
+				activeTodos = append(activeTodos, t)
+			}
+		}
+		handlers.PrintTable(activeTodos, handlers.TableConfig{
+			ShowCategory: true,
+			ShowPriority: true,
+			ShowStatus:   true,
+		})
 
 	default:
 		fmt.Println("invalid cmd command")

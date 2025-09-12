@@ -1,26 +1,35 @@
 [
     {
-        "Title": "Написать код",
-        "Description": "Рефакторинг модуля категорий",
-        "Category": "Работа",
-        "Completed": true,
-        "CreatedAt": "2025-09-12T10:04:27.5457547+03:00",
-        "CompletedAt": "2025-09-12T10:06:28.611369+03:00"
+        "title": "Написать код",
+        "description": "Рефакторинг модуля категорий",
+        "category": "Работа",
+        "priority": "",
+        "status": "",
+        "completed": true,
+        "createdAt": "2025-09-12T10:04:27.5457547+03:00",
+        "UpdatedAt": "0001-01-01T00:00:00Z",
+        "completedAt": "2025-09-12T10:06:28.611369+03:00"
     },
     {
-        "Title": "Купить кофе",
-        "Description": "Арабика 250г",
-        "Category": "Покупки",
-        "Completed": false,
-        "CreatedAt": "2025-09-12T10:04:33.710956+03:00",
-        "CompletedAt": null
+        "title": "Купить кофе",
+        "description": "Арабика 250г",
+        "category": "Покупки",
+        "priority": "medium",
+        "status": "",
+        "completed": false,
+        "createdAt": "2025-09-12T10:04:33.710956+03:00",
+        "UpdatedAt": "0001-01-01T00:00:00Z",
+        "completedAt": null
     },
     {
-        "Title": "Прочитать книгу",
-        "Description": "",
-        "Category": "Личное",
-        "Completed": false,
-        "CreatedAt": "2025-09-12T10:04:35.2175053+03:00",
-        "CompletedAt": null
+        "title": "Прочитать книгу",
+        "description": "",
+        "category": "Личное",
+        "priority": "high",
+        "status": "in_progress",
+        "completed": false,
+        "createdAt": "2025-09-12T10:04:35.2175053+03:00",
+        "UpdatedAt": "2025-09-12T11:06:56.3672773+03:00",
+        "completedAt": null
     }
 ]
