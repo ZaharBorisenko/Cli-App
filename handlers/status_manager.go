@@ -1,4 +1,3 @@
-// handlers/status_manager.go
 package handlers
 
 import (

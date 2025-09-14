@@ -27,6 +27,7 @@ type CmdFlags struct {
 	ListByStatus   string
 	ListDone       bool
 	ListActive     bool
+	StatisticTodo  bool
 }
 
 func NewCmdFlags() *CmdFlags {
@@ -39,6 +40,7 @@ func NewCmdFlags() *CmdFlags {
 	flag.IntVar(&cf.Del, "del", -1, "Specify a todo by index to delete")
 	flag.IntVar(&cf.Toggle, "toggle", -1, "Specify a todo by index to toggle")
 	flag.BoolVar(&cf.List, "list", false, "List all todos")
+	flag.BoolVar(&cf.StatisticTodo, "stats", false, "Stats all todos")
 
 	// category
 	flag.StringVar(&cf.AddCategory, "addCategory", "", "Add a new category")
@@ -69,6 +71,8 @@ func (cf *CmdFlags) Execute(todos *handlers.Todos) {
 	switch {
 	case cf.List:
 		todos.PrintTodos()
+	case cf.StatisticTodo:
+		todos.StatisticTodo()
 	case cf.Add != "":
 		todos.Add(cf.Add)
 	case cf.Edit != "":
@@ -203,9 +207,3 @@ func (cf *CmdFlags) Execute(todos *handlers.Todos) {
 		fmt.Println("invalid cmd command")
 	}
 }
-
-// go run main.go -list
-// go run main.go -edit "2:ALLO SUKA"
-// go run main.go -add "test"
-// go run main.go -del 0
-// go run main.go -addDesc "2:ALLO SUKAdddd"

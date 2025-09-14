@@ -4,6 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ZaharBorisenko/Cli-App/models"
+	table2 "github.com/aquasecurity/table"
+	"os"
+	"strconv"
 	"time"
 )
 
@@ -97,4 +100,44 @@ func (todos *Todos) Edit(id int, newTitle string) error {
 	*todos = t
 	todos.PrintTodos()
 	return nil
+}
+
+func (todos *Todos) StatisticTodo() {
+	if len(*todos) == 0 {
+		fmt.Println("No tasks available")
+		return
+	}
+
+	var (
+		allTask    = len(*todos)
+		doneTask   = 0
+		todoTask   = 0
+		inProgress = 0
+	)
+
+	for _, task := range *todos {
+		switch task.Status {
+		case models.StatusDone:
+			doneTask++
+		case models.StatusTodo:
+			todoTask++
+		case models.StatusInProgress:
+			inProgress++
+		}
+	}
+
+	table := table2.New(os.Stdout)
+	table.SetHeaders("Metric", "Count", "Percentage")
+
+	table.AddRow("Total Tasks", strconv.Itoa(allTask), "100%")
+	table.AddRow("✅ Done", strconv.Itoa(doneTask),
+		fmt.Sprintf("%.1f%%", float64(doneTask)/float64(allTask)*100))
+	table.AddRow("🚧 In Progress", strconv.Itoa(inProgress),
+		fmt.Sprintf("%.1f%%", float64(inProgress)/float64(allTask)*100))
+	table.AddRow("⏳ Todo", strconv.Itoa(todoTask),
+		fmt.Sprintf("%.1f%%", float64(todoTask)/float64(allTask)*100))
+
+	fmt.Println("📊 Task Statistics")
+	fmt.Println("==================")
+	table.Render()
 }
