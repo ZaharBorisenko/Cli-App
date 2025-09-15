@@ -10,24 +10,25 @@ import (
 )
 
 type CmdFlags struct {
-	Add            string
-	AddDesc        string
-	Del            int
-	Edit           string
-	Toggle         int
-	List           bool
-	AddCategory    string
-	SetCategory    string
-	ListByCat      string
-	ListCats       bool
-	SetPriority    string
-	ListByPriority string
-	Colors         bool
-	SetStatus      string
-	ListByStatus   string
-	ListDone       bool
-	ListActive     bool
-	StatisticTodo  bool
+	Add              string
+	AddDesc          string
+	Del              int
+	Edit             string
+	Toggle           int
+	List             bool
+	AddCategory      string
+	SetCategory      string
+	ListByCat        string
+	ListCats         bool
+	SetPriority      string
+	ListByPriority   string
+	Colors           bool
+	SetStatus        string
+	ListByStatus     string
+	ListDone         bool
+	ListActive       bool
+	StatisticTodo    bool
+	SetTimeCompleted string
 }
 
 func NewCmdFlags() *CmdFlags {
@@ -59,6 +60,9 @@ func NewCmdFlags() *CmdFlags {
 	flag.BoolVar(&cf.ListDone, "listDone", false, "List completed tasks")
 	flag.BoolVar(&cf.ListActive, "listActive", false, "List active tasks (not completed)")
 
+	//time
+	flag.StringVar(&cf.SetTimeCompleted, "setTime", "", "set date completed")
+
 	flag.Parse()
 	return &cf
 }
@@ -67,8 +71,26 @@ func (cf *CmdFlags) Execute(todos *handlers.Todos) {
 	categoryManager := handlers.NewCategoryManager(todos)
 	priorityManager := handlers.NewPriorityManager(todos)
 	statusManager := handlers.NewStatusManager(todos)
+	timeManager := handlers.NewTimeManager(todos)
 
 	switch {
+	case cf.SetTimeCompleted != "":
+		parts := strings.SplitN(cf.SetTimeCompleted, ":", 2)
+		if len(parts) != 2 {
+			fmt.Println("invalid format for setTimeCompleted")
+			return
+		}
+		index, err := strconv.Atoi(parts[0])
+		if err != nil {
+			fmt.Println("invalid index")
+			return
+		}
+		if err := timeManager.SetDateCompleted(index, parts[1]); err != nil {
+			fmt.Println("Error:", err)
+		} else {
+			fmt.Printf("time '%s' set for task %d\n", parts[1], index)
+			todos.PrintTodos()
+		}
 	case cf.List:
 		todos.PrintTodos()
 	case cf.StatisticTodo:

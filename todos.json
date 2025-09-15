@@ -6,6 +6,7 @@
         "priority": "",
         "status": "",
         "completed": true,
+        "deadline": "2025-09-16T00:00:00Z",
         "createdAt": "2025-09-12T10:04:27.5457547+03:00",
         "UpdatedAt": "0001-01-01T00:00:00Z",
         "completedAt": "2025-09-12T10:06:28.611369+03:00"
@@ -17,6 +18,7 @@
         "priority": "medium",
         "status": "done",
         "completed": true,
+        "deadline": "2025-09-16T00:00:00+03:00",
         "createdAt": "2025-09-12T10:04:33.710956+03:00",
         "UpdatedAt": "2025-09-14T11:48:46.1695458+03:00",
         "completedAt": "2025-09-14T11:46:24.2867361+03:00"
@@ -28,6 +30,7 @@
         "priority": "high",
         "status": "in_progress",
         "completed": false,
+        "deadline": null,
         "createdAt": "2025-09-12T10:04:35.2175053+03:00",
         "UpdatedAt": "2025-09-12T11:06:56.3672773+03:00",
         "completedAt": null
@@ -39,6 +42,7 @@
         "priority": "",
         "status": "todo",
         "completed": false,
+        "deadline": null,
         "createdAt": "2025-09-14T11:50:36.7528804+03:00",
         "UpdatedAt": "0001-01-01T00:00:00Z",
         "completedAt": null
@@ -50,6 +54,7 @@
         "priority": "",
         "status": "todo",
         "completed": false,
+        "deadline": null,
         "createdAt": "2025-09-14T11:50:39.7622488+03:00",
         "UpdatedAt": "0001-01-01T00:00:00Z",
         "completedAt": null
@@ -61,6 +66,7 @@
         "priority": "",
         "status": "todo",
         "completed": false,
+        "deadline": null,
         "createdAt": "2025-09-14T11:50:43.8320074+03:00",
         "UpdatedAt": "0001-01-01T00:00:00Z",
         "completedAt": null
@@ -72,6 +78,7 @@
         "priority": "",
         "status": "todo",
         "completed": false,
+        "deadline": null,
         "createdAt": "2025-09-14T11:50:53.5899605+03:00",
         "UpdatedAt": "0001-01-01T00:00:00Z",
         "completedAt": null
@@ -83,6 +90,7 @@
         "priority": "",
         "status": "todo",
         "completed": false,
+        "deadline": null,
         "createdAt": "2025-09-14T11:56:30.0985553+03:00",
         "UpdatedAt": "0001-01-01T00:00:00Z",
         "completedAt": null
@@ -94,6 +102,7 @@
         "priority": "",
         "status": "todo",
         "completed": false,
+        "deadline": null,
         "createdAt": "2025-09-14T11:58:32.9691441+03:00",
         "UpdatedAt": "0001-01-01T00:00:00Z",
         "completedAt": null

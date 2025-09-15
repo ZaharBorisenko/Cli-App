@@ -28,6 +28,7 @@ func (todos *Todos) Add(title string) {
 		Completed:   false,
 		CreatedAt:   time.Now(),
 		CompletedAt: nil,
+		Deadline:    nil,
 	}
 
 	*todos = append(*todos, newTodo)

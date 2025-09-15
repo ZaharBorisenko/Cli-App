@@ -20,10 +20,10 @@ func PrintTable(todos []models.Todo, config TableConfig) {
 	table := table2.New(os.Stdout)
 	table.SetRowLines(false)
 
-	statusManager := StatusManager{} // Для получения символов статусов
+	statusManager := StatusManager{}
 
 	// Динамически формируем заголовки
-	headers := []string{"#", "Title", "Description"}
+	headers := []string{"#", "Title", "Description", "Deadline"}
 	if config.ShowCategory {
 		headers = append(headers, "Category")
 	}
@@ -46,6 +46,7 @@ func PrintTable(todos []models.Todo, config TableConfig) {
 			strconv.Itoa(id),
 			t.Title,
 			t.Description,
+			formatTime(t.Deadline, "2006-01-02"),
 		}
 
 		if config.ShowCategory {
@@ -72,16 +73,23 @@ func PrintTable(todos []models.Todo, config TableConfig) {
 			row = append(row, fmt.Sprintf("%s %s", statusSymbol, t.Status))
 		}
 
-		row = append(row, t.CreatedAt.Format(time.RFC1123))
+		row = append(row, t.CreatedAt.Format("2006-01-02"))
 
 		if config.ShowCompletedAt && t.CompletedAt != nil {
-			row = append(row, t.CompletedAt.Format(time.RFC1123))
+			row = append(row, t.CompletedAt.Format("2006-01-02"))
 		} else if config.ShowCompletedAt {
-			row = append(row, "") // Пустая строка если нет времени завершения
+			row = append(row, "")
 		}
 
 		table.AddRow(row...)
 	}
 
 	table.Render()
+}
+
+func formatTime(t *time.Time, layout string) string {
+	if t == nil {
+		return ""
+	}
+	return t.Format(layout)
 }
